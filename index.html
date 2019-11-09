@@ -159,8 +159,8 @@ user-select:none;
 		lastTime = currentTime;			
 		drawGL(deltaTime);
 		
-		ctx.fillStyle = "white";
-		ctx.fillText("fullscreen",canvas.width-60, canvas.height-20);
+		//ctx.fillStyle = "white";
+		//ctx.fillText("full screen",canvas.width-60, canvas.height-20);
 	}
 	
 	function InitWrappers()// РїРѕСЃР»Рµ С‚РѕРіРѕ РєР°Рє WASM РІС‹Р·РІР°Р» main
@@ -252,7 +252,7 @@ arrPatch[3].lineTo(canvas.width/2, canvas.height/2);
 arrPatch[3].lineTo(0, canvas.height);
 arrPatch[3].closePath();
  arrPatch[4] = new Path2D()
-arrPatch[4].rect(canvas.width-80, canvas.height-40,80,40);
+arrPatch[4].rect(0,0,80,40);
 arrPatch[4].closePath();
 ctx.strokeStyle = "#ffffff"
 ctx.stroke(arrPatch[0]);
