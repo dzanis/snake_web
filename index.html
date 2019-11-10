@@ -191,9 +191,9 @@
 	function resizeCanvas()
 	{		
 	// https://jsfiddle.net/dzanis/faLb1nd3/
-	canvas.width = 640;
-	canvas.height = 640;
-	aspectRatio();
+	canvas.width = Math.min(640,window.innerWidth);
+	canvas.height = Math.min(640,window.innerHeight);
+	ctx.translate(0.5, 0.5);// убрать размытость линий
 		initTouchMove();		
 		resizeGL(canvas.width,canvas.height);		
     }
