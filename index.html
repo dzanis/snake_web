@@ -131,7 +131,7 @@
 	
 	
 	var canvas = document.getElementById("canvas");
-	var ctx ;
+	var ctx = canvas.getContext("2d");
 		
 	var resizeGL;
 	var drawGL;
@@ -188,15 +188,49 @@
 		setInterval(gameLoop, 16);
 	}
 	
-	function resizeCanvas() 
+	function resizeCanvas()
 	{		
-		canvas.width = Math.min(640,window.innerWidth);
-		canvas.height = Math.min(640,window.innerHeight);
-		ctx = canvas.getContext("2d",{alpha: false,antialias: false,depth: false});
-		ctx.translate(0.5, 0.5);// убрать размытость линий
+	// https://jsfiddle.net/dzanis/faLb1nd3/
+	canvas.width = Math.min(640,window.innerWidth);
+	canvas.height = Math.min(640,window.innerHeight);
+	if(canvas.width < 420)
+	{
+	canvas.width = 420;
+	aspectRatio(); 
+	}
+	else
+	if(canvas.height < 520)
+	{
+	canvas.height = 520;
+	aspectRatio();
+	}
+	else
+	{
+	canvas.style.width = canvas.width + 'px';
+    canvas.style.height = canvas.height + 'px';
+	ctx.translate(0.5, 0.5);// убрать размытость линий
+	}
 		initTouchMove();		
 		resizeGL(canvas.width,canvas.height);		
     }
+	
+	function aspectRatio() 
+	{
+	//https://stackoverflow.com/a/19400379/3552682
+	var canvasRatio = canvas.height / canvas.width;
+    var windowRatio = window.innerHeight / window.innerWidth;
+    var width,height;
+    if (windowRatio < canvasRatio) {
+        height = window.innerHeight;
+        width = height / canvasRatio;
+		
+    } else {
+        width = window.innerWidth;
+        height = width * canvasRatio;
+    }
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+	}
 	
 	function strokeStyle(r, g, b)
 	{		
