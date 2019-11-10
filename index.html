@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=0;"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=0"/>
     <title>snake</title>
     <style>
 	
-	 body{ margin:0; padding:0; } /* to remove the top and left whitespace */	 
+	 body{ margin:0; padding:0;} /* to remove the top and left whitespace */	 
 	  .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
 	  textarea.emscripten { font-family: monospace; width: 80%; }
 	  div.emscripten { text-align: center; }
@@ -75,7 +75,7 @@
     <div class="emscripten">
       <progress value="0" max="100" id="progress" hidden=1></progress>  
     </div>
-      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1 width="640" height="640" ></canvas>
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1  ></canvas>
     <div class="emscripten" style='display:none;'>
       <input type="checkbox" id="resize">Resize canvas
       <input type="checkbox" id="pointerLock" checked>Lock/hide mouse pointer
@@ -190,22 +190,17 @@
 	
 	function resizeCanvas() 
 	{
-        canvas.width = 640;
-        canvas.height = 640;
-		
-		if(canvas.width > window.innerWidth || canvas.height > window.innerHeight)
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerHeight;			
+		if(canvas.width > 640 || canvas.height > 640)
 		{
-		  canvas.width = window.innerWidth;
-		  canvas.height = window.innerHeight;
-		}
-		
+		  canvas.width = Math.min(640,window.innerWidth);
+		  canvas.height = Math.min(640,window.innerHeight);
+		}		
 		ctx = canvas.getContext("2d",{alpha: false,antialias: false,depth: false});
-		ctx.translate(0.5, 0.5);// убрать размытость линий
-		
-		initTouchMove();
-		
-		resizeGL(canvas.width,canvas.height);
-		
+		ctx.translate(0.5, 0.5);// убрать размытость линий		
+		initTouchMove();		
+		resizeGL(canvas.width,canvas.height);		
     }
 	
 	function strokeStyle(r, g, b)
@@ -231,7 +226,6 @@ function initTouchMove()
   var MOVE = 'mousemove', DOWN = 'mousedown',UP='mouseup',OUT='mouseout';
 	if(is_touch_device())
 	{
-		fullscreen();
 		MOVE = 'touchmove', DOWN = 'touchstart',UP='touchend',OUT='touchcancel';
 	}
   
