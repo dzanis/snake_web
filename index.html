@@ -6,81 +6,76 @@
 	<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=0;"/>
     <title>snake</title>
     <style>
-      .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
-      textarea.emscripten { font-family: monospace; width: 80%; }
-      div.emscripten { text-align: center; }
-      div.emscripten_border { border: 1px solid black; }
-      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+	
+	 body{ margin:0; padding:0; } /* to remove the top and left whitespace */	 
+	  .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
+	  textarea.emscripten { font-family: monospace; width: 80%; }
+	  div.emscripten { text-align: center; }
 	  
-	 canvas.emscripten, img {
-    image-rendering: optimizeSpeed;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    image-rendering: pixelated;
-    -ms-interpolation-mode: nearest-neighbor;
-   border: 0px none; background-color: black;
-   
-/*
-	СѓР±СЂР°С‚СЊ РІС‹РґРµР»РµРЅРёРµ РїСЂРё РґРѕР»РіРѕРј РЅР°Р¶Р°С‚РёРё
-	https://stackoverflow.com/a/11237968/3552682
-*/
--webkit-touch-callout:none;
--webkit-user-select:none;
--khtml-user-select:none;
--moz-user-select:none;
--ms-user-select:none;
-user-select:none;
--webkit-tap-highlight-color:rgba(0,0,0,0);
--webkit-touch-callout:none;
+	   
+	canvas.emscripten, img {
+	  /* the canvas *must not* have any border or padding, or mouse coords will be wrong */	
+	 border: 0px none; background-color: black;	 
+	/* убрать сглаживание картинки */
+	image-rendering: optimizeSpeed;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: -webkit-optimize-contrast;
+	image-rendering: optimize-contrast;
+	image-rendering: pixelated;
+	-ms-interpolation-mode: nearest-neighbor;
+	/* убрать выделение при долгом нажатии https://stackoverflow.com/a/11237968/3552682 */
+	-webkit-touch-callout:none;
+	-webkit-user-select:none;
+	-khtml-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	-webkit-touch-callout:none;
 
 }
 
-      .spinner {
-        height: 50px;
-        width: 50px;
-        margin: 0px auto;
-        -webkit-animation: rotation .8s linear infinite;
-        -moz-animation: rotation .8s linear infinite;
-        -o-animation: rotation .8s linear infinite;
-        animation: rotation 0.8s linear infinite;
-        border-left: 10px solid rgb(0,150,240);
-        border-right: 10px solid rgb(0,150,240);
-        border-bottom: 10px solid rgb(0,150,240);
-        border-top: 10px solid rgb(100,0,200);
-        border-radius: 100%;
-        background-color: rgb(200,100,250);
-      }
-      @-webkit-keyframes rotation {
-        from {-webkit-transform: rotate(0deg);}
-        to {-webkit-transform: rotate(360deg);}
-      }
-      @-moz-keyframes rotation {
-        from {-moz-transform: rotate(0deg);}
-        to {-moz-transform: rotate(360deg);}
-      }
-      @-o-keyframes rotation {
-        from {-o-transform: rotate(0deg);}
-        to {-o-transform: rotate(360deg);}
-      }
-      @keyframes rotation {
-        from {transform: rotate(0deg);}
-        to {transform: rotate(360deg);}
-      }
+	.spinner {
+	height: 50px;
+	width: 50px;
+	margin: 0px auto;
+	-webkit-animation: rotation .8s linear infinite;
+	-moz-animation: rotation .8s linear infinite;
+	-o-animation: rotation .8s linear infinite;
+	animation: rotation 0.8s linear infinite;
+	border-left: 10px solid rgb(0,150,240);
+	border-right: 10px solid rgb(0,150,240);
+	border-bottom: 10px solid rgb(0,150,240);
+	border-top: 10px solid rgb(100,0,200);
+	border-radius: 100%;
+	background-color: rgb(200,100,250);
+	}
+	@-webkit-keyframes rotation {
+	from {-webkit-transform: rotate(0deg);}
+	to {-webkit-transform: rotate(360deg);}
+	}
+	@-moz-keyframes rotation {
+	from {-moz-transform: rotate(0deg);}
+	to {-moz-transform: rotate(360deg);}
+	}
+	@-o-keyframes rotation {
+	from {-o-transform: rotate(0deg);}
+	to {-o-transform: rotate(360deg);}
+	}
+	@keyframes rotation {
+	from {transform: rotate(0deg);}
+	to {transform: rotate(360deg);}
+	}
 
     </style>
   </head>
   <body>
-    <hr/>
     <figure style="overflow:visible;" id="spinner"><div class="spinner"></div><center style="margin-top:0.5em"><strong>emscripten</strong></center></figure>
     <div class="emscripten" id="status">Downloading...</div>
     <div class="emscripten">
       <progress value="0" max="100" id="progress" hidden=1></progress>  
     </div>
-    <div class="emscripten_border">
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1 width="640" height="640" ></canvas>
-    </div>
-    <hr/>
     <div class="emscripten" style='display:none;'>
       <input type="checkbox" id="resize">Resize canvas
       <input type="checkbox" id="pointerLock" checked>Lock/hide mouse pointer
@@ -88,20 +83,16 @@ user-select:none;
       <input type="button" value="Fullscreen" onclick="Module.requestFullscreen(document.getElementById('pointerLock').checked, 
                                                                                 document.getElementById('resize').checked)">
     </div>
-    
-    <hr/>
     <textarea class="emscripten" id="output" rows="8"style='display:none;' ></textarea>
-    <hr>
     <script type='text/javascript'>
-	
-	
+		
 	// my js code 
 	function Sound() 
 	{
 	this.load = function(src){
 		var audio = new Audio();
 	  audio.src = src;
-	  audio.loop=true;// Р±РµСЃРєРѕРЅРµС‡РЅРѕРµ РїСЂРѕРёРіСЂС‹РІР°РЅРёРµ
+	  audio.loop=true;// бесконечное проигрывание
 	  this.sound = audio;
 	  //src = src.replace('.', '_');
 	  this[src] = audio;
@@ -111,7 +102,7 @@ user-select:none;
 	  //src = src.replace('.', '_');
 	  this.sound = this[src];
 	  this.sound.play();
-	  // РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ РµСЃР»Рё РјРµР»РѕРґРёСЏ РѕСЃС‚Р°РЅРѕРІРёС‚СЃСЏ
+	  // на всякий случай если мелодия остановится
 	  this.sound.addEventListener('ended', function() {console.log('ended ' + this.src);this.currentTime = 0;this.play();}, false);
 		
 	  }
@@ -120,7 +111,7 @@ user-select:none;
 	  }
 	  this.stop = function(){
 		this.sound.pause();
-		this.sound.currentTime = 0;// С‡С‚РѕР±С‹ РїРѕСЃР»Рє СЃС‚РѕРїР° РёРіСЂР°Р»Р° СЃРЅР°С‡Р°Р»Р°
+		this.sound.currentTime = 0;// чтобы послк стопа играла сначала
 	  }
 	  this.pause = function(){
 		this.sound.pause();
@@ -140,9 +131,7 @@ user-select:none;
 	
 	
 	var canvas = document.getElementById("canvas");
-	var ctx = canvas.getContext("2d",{alpha: false,antialias: false,depth: false});
-	ctx.translate(0.5, 0.5);// СѓР±СЂР°С‚СЊ СЂР°Р·РјС‹С‚РѕСЃС‚СЊ Р»РёРЅРёР№
-
+	var ctx ;
 		
 	var resizeGL;
 	var drawGL;
@@ -163,7 +152,7 @@ user-select:none;
 		//ctx.fillText("full screen",canvas.width-60, canvas.height-20);
 	}
 	
-	function InitWrappers()// РїРѕСЃР»Рµ С‚РѕРіРѕ РєР°Рє WASM РІС‹Р·РІР°Р» main
+	function InitWrappers()// после того как WASM вызвал main
 	{		
 		resizeGL = Module.cwrap('resizeGL', 'undefined', ['int'], ['int']);	
 		drawGL = Module.cwrap('drawGL', 'undefined', ['float']);	
@@ -171,16 +160,11 @@ user-select:none;
 		keyUp = Module.cwrap('keyUp', 'undefined',['int']);	
 		hide = Module.cwrap('hide', 'undefined');
 		show = Module.cwrap('show', 'undefined');
+				
 		
-		if(canvas.width > window.innerWidth || canvas.height > window.innerHeight)
-		{
-		  canvas.width = window.innerWidth;
-		  canvas.height = window.innerHeight;
-		}
-		
-		initTouchMove();
-		
-		resizeGL(canvas.width,canvas.height);
+		window.addEventListener('resize', resizeCanvas, false);
+          window.addEventListener('orientationchange', resizeCanvas, false);
+          resizeCanvas();
 						
 		document.addEventListener('keydown', function(event) 
 		{
@@ -204,10 +188,30 @@ user-select:none;
 		setInterval(gameLoop, 16);
 	}
 	
+	function resizeCanvas() 
+	{
+        canvas.width = 640;
+        canvas.height = 640;
+		
+		if(canvas.width > window.innerWidth || canvas.height > window.innerHeight)
+		{
+		  canvas.width = window.innerWidth;
+		  canvas.height = window.innerHeight;
+		}
+		
+		ctx = canvas.getContext("2d",{alpha: false,antialias: false,depth: false});
+		ctx.translate(0.5, 0.5);// убрать размытость линий
+		
+		initTouchMove();
+		
+		resizeGL(canvas.width,canvas.height);
+		
+    }
+	
 	function strokeStyle(r, g, b)
 	{		
 		ctx.strokeStyle = "rgba("+r+","+g+","+b+",1.0)";
-		ctx.fillStyle = ctx.strokeStyle;// С‚Р°Рє РєР°Рє РґР»СЏ РІС‹РІРѕРґР° С‚РµРєСЃС‚Р° РЅСѓР¶РµРЅ fillStyle
+		ctx.fillStyle = ctx.strokeStyle;// так как для вывода текста нужен fillStyle
 	}
 
 // https://stackoverflow.com/questions/13157586/full-screen-canvas-on-mobile-devices	
@@ -259,7 +263,7 @@ ctx.stroke(arrPatch[0]);
 ctx.stroke(arrPatch[1]);
 ctx.stroke(arrPatch[2]);
 
- // РЅР°РґРѕ РїРѕС„РёРєСЃРёС‚СЊ,С‚.Рє РєРѕРіРґР° РЅР° РІРµСЃСЊ СЌРєСЂР°РЅ РЅРµСЃРѕРІРїР°РґР°СЋС‚ РєРѕСЂРґРёРЅР°С‚С‹ РЅР°Р¶Р°С‚РёСЏ РїРѕ С‚СЂРµСѓРіРѕР»СЊРЅРёРєР°Рј
+ // надо пофиксить,т.к когда на весь экран несовпадают кординаты нажатия по треугольникам
 function getEventPoints(canvas,event) {
   if (event.type.startsWith("touch")) {
   	//Return x,y of touch event
@@ -284,7 +288,7 @@ function getEventPoints(canvas,event) {
 
 canvas.addEventListener(DOWN,  function (e) 
 {	
-	//  РґРІРѕР№РЅРѕРµ РЅР°Р¶Р°С‚РёРµ   
+	//  двойное нажатие   
      if(!tapedTwice) 
      {
         tapedTwice = true;
@@ -295,7 +299,7 @@ canvas.addEventListener(DOWN,  function (e)
        //console.log("tapedTwice");
 	   //fullscreen();
      }     		 
-	 // РґРѕР»РіРѕРµ РЅР°Р¶Р°С‚РёРµ 0.5 СЃРµРє 
+	 // долгое нажатие 0.5 сек 
 	 timeOut = setTimeout(function() {
 	 //console.log("longpress");
 	 keyUp(32);
@@ -352,7 +356,7 @@ canvas.addEventListener(MOVE, function(e)
 	clearInterval(timeOut);
 
   var point = getEventPoints(canvas,e);
-  // e.preventDefault РЅСѓР¶РµРЅ С‡С‚РѕР±С‹ РЅРµ СЃРєСЂРѕР»Р»РёР»Р°СЃСЊ РІСЃСЏ СЃС‚СЂР°РЅРёС†Р° РЅР° СЃРµРЅСЃРѕСЂРЅС‹С… РґРёСЃРїР»РµСЏС…
+  // e.preventDefault нужен чтобы не скроллилась вся страница на сенсорных дисплеях
   e.preventDefault();   
   //console.log(MOVE);
   //console.log(point);
@@ -445,8 +449,6 @@ canvas.addEventListener(MOVE, function(e)
 	  	 
 	  
     </script>
-    <script async type="text/javascript" src="index.js"></script>
+	<script async type="text/javascript" src="index.js"></script>
   </body>
 </html>
-
-
