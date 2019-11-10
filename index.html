@@ -189,31 +189,11 @@
 	}
 	
 	function resizeCanvas() 
-	{
-	
+	{		
+		canvas.width = Math.min(640,window.innerWidth);
+		canvas.height = Math.min(640,window.innerHeight);
 		ctx = canvas.getContext("2d",{alpha: false,antialias: false,depth: false});
-		
-		canvas.width = 640;
-		canvas.height = 640;
-			
-		if(window.innerWidth < canvas.width )
-		{
-		  canvas.width = window.innerWidth;
-		  canvas.height = window.innerHeight;
-		}
-		
-		if(window.innerWidth < 420 )//resize by width
-		{
-		canvas.width = 420;
-		 document.getElementById("canvas").style.width = "100%";		  
-		}	
-		else
-		{
-		 document.getElementById("canvas").style.width = "";
-		  ctx.translate(0.5, 0.5);// убрать размытость линий
-		}
-		
-			
+		ctx.translate(0.5, 0.5);// убрать размытость линий
 		initTouchMove();		
 		resizeGL(canvas.width,canvas.height);		
     }
