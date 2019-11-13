@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	  <!-- viewport, без возможности его увеличения пользователем -->
+	<!-- viewport, без возможности его увеличения пользователем -->
 	<meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <title>snake</title>
     <style>
@@ -193,33 +193,14 @@
 	
 	function resizeCanvas()
 	{		
-	// https://jsfiddle.net/dzanis/faLb1nd3/
 	canvas.width = Math.min(640,window.innerWidth);
 	canvas.height = Math.min(640,window.innerHeight);
 	ctx.translate(0.5, 0.5);// убрать размытость линий
-	 //aspectRatio();
-		initTouchMove();		
+	
+		Touch.init();		
 		resizeGL(canvas.width,canvas.height);		
     }
-	
-	function aspectRatio() 
-	{
-	//https://stackoverflow.com/a/19400379/3552682
-	var canvasRatio = canvas.height / canvas.width;
-    var windowRatio = window.innerHeight / window.innerWidth;
-    var width,height;
-    if (windowRatio < canvasRatio) {
-        height = window.innerHeight;
-        width = height / canvasRatio;
 		
-    } else {
-        width = window.innerWidth;
-        height = width * canvasRatio;
-    }
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
-	}
-	
 	function strokeStyle(r, g, b)
 	{		
 		ctx.strokeStyle = "rgba("+r+","+g+","+b+",1.0)";
@@ -236,151 +217,7 @@
     canvas.mozRequestFullScreen();
   }            
 }	
-	
-function initTouchMove()
-{
-  function is_touch_device() {return 'ontouchstart' in window;}
-  var MOVE = 'mousemove', DOWN = 'mousedown',UP='mouseup',OUT='mouseout';
-	if(is_touch_device())
-	{
-		MOVE = 'touchmove', DOWN = 'touchstart',UP='touchend',OUT='touchcancel';
-	}
-  
-  var arrPatch = [];
-arrPatch[0] = new Path2D()
-arrPatch[0].moveTo(0, 0);
-arrPatch[0].lineTo(canvas.width/2, canvas.height/2);
-arrPatch[0].lineTo(0, canvas.height);
-arrPatch[0].closePath();
-arrPatch[1] = new Path2D()
-arrPatch[1].moveTo(0, 0);
-arrPatch[1].lineTo(canvas.width/2, canvas.height/2);
-arrPatch[1].lineTo(canvas.width, 0);
-arrPatch[1].closePath();
-arrPatch[2] = new Path2D()
-arrPatch[2].moveTo(canvas.width, 0);
-arrPatch[2].lineTo(canvas.width/2, canvas.height/2);
-arrPatch[2].lineTo(canvas.width, canvas.height);
-arrPatch[2].closePath();
-arrPatch[3] = new Path2D()
-arrPatch[3].moveTo(canvas.width, canvas.height);
-arrPatch[3].lineTo(canvas.width/2, canvas.height/2);
-arrPatch[3].lineTo(0, canvas.height);
-arrPatch[3].closePath();
- arrPatch[4] = new Path2D()
-arrPatch[4].rect(0,0,80,40);
-arrPatch[4].closePath();
-ctx.strokeStyle = "#ffffff"
-ctx.stroke(arrPatch[0]);
-ctx.stroke(arrPatch[1]);
-ctx.stroke(arrPatch[2]);
-
- // надо пофиксить,т.к когда на весь экран несовпадают кординаты нажатия по треугольникам
-function getEventPoints(canvas,event) {
-  if (event.type.startsWith("touch")) {
-  	//Return x,y of touch event
-      var touch = event.touches[0];
-      return{
-        x: touch.clientX,
-        y: touch.clientY
-      };
-  } else if (event.type.startsWith("mouse")) {
-    //Return x,y of mouse event
-    var rect = canvas.getBoundingClientRect();
-    return {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
-    };
-  }
-  return null;
-}
-
- var tapedTwice = false;
- var timeOut;
-
-canvas.addEventListener(DOWN,  function (e) 
-{	
-	//  двойное нажатие   
-     if(!tapedTwice) 
-     {
-        tapedTwice = true;
-        setTimeout( function() { tapedTwice = false; }, 300 ); 
-    }
-     else
-     {
-       //console.log("tapedTwice");
-	   //fullscreen();
-     }     		 
-	 // долгое нажатие 0.5 сек 
-	 timeOut = setTimeout(function() {
-	 //console.log("longpress");
-	 keyUp(32);
-	 }, 500 );
-
-	var point = getEventPoints(canvas,e);
-  e.preventDefault(); 
-  const dir = ["left","up","right","down","fullscreen"];
-  arrPatch.forEach(myFunction);			
-    function myFunction(patch, index, array)
-    {				
-      if(ctx.isPointInPath(patch, point.x, point.y)) 
-      {
-        //console.log("clicked in " + dir[index])
-        //ctx.clearRect(0, 0, canvas.width, canvas.height);
-        switch(dir[index])
-          {
-            case "left":
-              keyDown(37);
-              break;
-             case "up":
-              keyDown(38);
-              break; 
-              case "right":
-              keyDown(39);
-              break;
-              case "down":
-              keyDown(40);
-              break;
-			  case "fullscreen":
-              fullscreen();
-              break;
-          }
-        return;
-        
-      }							
-    }
-
-}, false);
-
-canvas.addEventListener(UP, function(e) 
-{
-	clearInterval(timeOut);
-	//console.log(UP);
- }, false);
-
-canvas.addEventListener(OUT, function(e) 
-{
-	//console.log(OUT);
- }, false);
-
-canvas.addEventListener(MOVE, function(e) 
-{
-	clearInterval(timeOut);
-
-  var point = getEventPoints(canvas,e);
-  // e.preventDefault нужен чтобы не скроллилась вся страница на сенсорных дисплеях
-  e.preventDefault();   
-  //console.log(MOVE);
-  //console.log(point);
-
-}, false);
-
-}
-
-
-	
-	
-	  	
+		  	
       var statusElement = document.getElementById('status');
       var progressElement = document.getElementById('progress');
       var spinnerElement = document.getElementById('spinner');
@@ -456,13 +293,7 @@ canvas.addEventListener(MOVE, function(e)
           if (text) Module.printErr('[post-exception status] ' + text);
         };
       };
-	  
-	
-	  	 
-	 	  
-    </script>
-    <script async type="text/javascript" src="index.js"></script>
-  </body>
-</html>
-
-
+	  </script>
+	  <script src="Touch.js"></script>
+	  <script async src=index.js></script>
+	  </body></html>
