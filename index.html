@@ -133,57 +133,61 @@
 	
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
-		
-	var resizeGL;
-	var drawGL;
-	var keyDown;
-	var keyUp;
-	var hide;
-	var show;
 	
+	// fps counter
+	window.getFPS = (function () {
+  var lastLoop = (new Date()).getMilliseconds();
+  var count = 1;
+  var fps = 0;
+
+  return function () {
+    var currentLoop = (new Date()).getMilliseconds();
+    if (lastLoop > currentLoop) {
+      fps = count;
+      count = 1;
+    } else {
+      count += 1;
+    }
+    lastLoop = currentLoop;
+    return fps;
+  };
+}());
+		
 	var lastTime = Date.now();
 	function gameLoop()
 	{
 		var currentTime =  Date.now();
         var deltaTime = (currentTime - lastTime)/ 1000.0;
 		lastTime = currentTime;			
-		drawGL(deltaTime);
+		Module._drawGL(deltaTime);
 		
-		//ctx.fillStyle = "white";
-		//ctx.fillText("full screen",canvas.width-60, canvas.height-20);
+		ctx.fillStyle = "white";
+		ctx.fillText(getFPS(),20, 120);
 		 requestAnimationFrame(gameLoop);
 	}
 	
 	function InitWrappers()// после того как WASM вызвал main
-	{		
-		resizeGL = Module.cwrap('resizeGL', 'undefined', ['int'], ['int']);	
-		drawGL = Module.cwrap('drawGL', 'undefined', ['float']);	
-		keyDown = Module.cwrap('keyDown', 'undefined',['int']);	
-		keyUp = Module.cwrap('keyUp', 'undefined',['int']);	
-		hide = Module.cwrap('hide', 'undefined');
-		show = Module.cwrap('show', 'undefined');
-				
-		
+	{					
+		Module._initGL();
 		window.addEventListener('resize', resizeCanvas, false);
-          window.addEventListener('orientationchange', resizeCanvas, false);
           resizeCanvas();
 						
 		document.addEventListener('keydown', function(event) 
 		{
-		keyDown(event.which);
+		Module._keyDown(event.which);
 		}, true);
 		
 		document.addEventListener('keyup', function(event) 
 		{
-		keyUp(event.which);
+		Module._keyUp(event.which);
 		}, true);
 				
 		document.addEventListener( 'visibilitychange' , function() 
 		{
 			if (document.hidden)
-				hide();
+				Module._hide();
 			else 
-				show();
+				Module._show();
 		}, false );
 				
 		//setInterval(() => { drawGL(1.0);  }, 16);
@@ -196,9 +200,9 @@
 	canvas.width = Math.min(640,window.innerWidth);
 	canvas.height = Math.min(640,window.innerHeight);
 	ctx.translate(0.5, 0.5);// убрать размытость линий
-	
+	console.log('resizeCanvas');
 		Touch.init();		
-		resizeGL(canvas.width,canvas.height);		
+		Module._resizeGL(canvas.width,canvas.height);		
     }
 		
 	function strokeStyle(r, g, b)
@@ -223,7 +227,7 @@
       var spinnerElement = document.getElementById('spinner');
 
       var Module = {
-        preRun: loadSound(),
+        preRun: [],
         postRun: [],
         print: (function() {
           var element = document.getElementById('output');
@@ -285,7 +289,12 @@
         }
 						
       };
+	  
+	  Module.preRun = loadSound;// загрузка музыки до загрузки wasm файла
+	  Module.postRun  = InitWrappers;// инициализация после того как был загружен wasm 
+	   
       Module.setStatus('Downloading...');
+	 	  
       window.onerror = function() {
         Module.setStatus('Exception thrown, see JavaScript console');
         spinnerElement.style.display = 'none';

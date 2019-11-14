@@ -43,19 +43,17 @@ Touch.init = function()
     }
   // remove button 
   var btnName = ['up','left','right','down','center'];
-  btnName.forEach(myFunction);			
-    function myFunction(btn, index, array)
-    {				
-      	var el = document.getElementById(btn); 
-		if(el != null)
-        el.outerHTML = ""; 						
-    }
+  btnName.forEach(function(btn){
+		var el = document.getElementById(btn); 
+		if(el != null) el.outerHTML = ""; 	});	
+
   
   // disable dragging
-  // FIXME this shouldn't be needed but we go a few px off bottom of screen, which enables drag
+  // добавил {passive: false}  чтобы не было перетаскивания 
   document.addEventListener('touchmove', function(event) {
     event.preventDefault();
-  });
+	//console.log('touchmove');
+  },{passive: false});
 
   //Touch.initFireButton();
 
@@ -63,7 +61,7 @@ Touch.init = function()
   // we need to do this eight times in all.
 
   Touch.dpad['up'] = Touch.createDPadButton('up', function() {
-    keyDown(38);
+    Module._keyDown(38);
   },
   function() {
     // no op
@@ -74,7 +72,7 @@ Touch.init = function()
 
 
   Touch.dpad['left'] = Touch.createDPadButton('left', function() {
-     keyDown(37);
+     Module._keyDown(37);
   }, function() {
     // no op
   });
@@ -83,7 +81,7 @@ Touch.init = function()
   
 
   Touch.dpad['right'] = Touch.createDPadButton('right', function() {
-    keyDown(39);
+    Module._keyDown(39);
   }, function() {
      // no op
   });
@@ -93,7 +91,7 @@ Touch.init = function()
 
 
   Touch.dpad['down'] = Touch.createDPadButton('down', function() {
-    keyDown(40); 
+    Module._keyDown(40); 
   }, function() {
     // no op
   });
@@ -105,7 +103,7 @@ Touch.init = function()
   Touch.dpad['center'] = Touch.createDPadButton('center', function() {
     // no op
   }, function() {
-    keyUp(32); // space
+    Module._keyUp(32); // space
   });
   Touch.dpad['center'].style.left= Touch.DPAD_BUTTON_WIDTH_SKIP_PERCENT + Touch.DPAD_BUTTON_WIDTH_PERCENT + '%';
   Touch.dpad['center'].style.bottom = Touch.DPAD_BUTTON_HEIGHT_PERCENT + '%';
