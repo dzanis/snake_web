@@ -161,8 +161,10 @@
 		lastTime = currentTime;			
 		Module._drawGL(deltaTime);
 		
+		ctx.textAlign = "start";
 		ctx.fillStyle = "white";
 		ctx.fillText(getFPS(),20, 120);
+		ctx.fillText(window.innerWidth +'x'+window.innerHeight,20, 145);
 		 requestAnimationFrame(gameLoop);
 	}
 	
