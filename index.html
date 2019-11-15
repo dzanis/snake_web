@@ -173,9 +173,11 @@
 		Module._initGL();
 		window.addEventListener('resize', resizeCanvas, false);
 		window.addEventListener('orientationchange', function () {
+		var originalBodyStyle = getComputedStyle(document.body).getPropertyValue('display');
 		document.body.style.display='none';
-		document.body.offsetHeight; //cause a reflow
-		document.body.style.display='block'; //cause a repaint
+		setTimeout(function () {
+		  document.body.style.display = originalBodyStyle;
+		}, 10);
 		});
           resizeCanvas();
 						
