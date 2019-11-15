@@ -172,13 +172,6 @@
 	{					
 		Module._initGL();
 		window.addEventListener('resize', resizeCanvas, false);
-		window.addEventListener('orientationchange', function () {
-		var originalBodyStyle = getComputedStyle(document.body).getPropertyValue('display');
-		document.body.style.display='none';
-		setTimeout(function () {
-		  document.body.style.display = originalBodyStyle;
-		}, 10);
-		});
           resizeCanvas();
 						
 		document.addEventListener('keydown', function(event) 
@@ -202,14 +195,26 @@
 		//setInterval(() => { drawGL(1.0);  }, 16);
 		gameLoop();
 		//setInterval(gameLoop, 16);
-	}
+	}	
 	
 	function resizeCanvas()
-	{		
-	canvas.width = Math.min(640,window.innerWidth);
-	canvas.height = Math.min(640,window.innerHeight);
+	{			
+	if(window.orientation !== undefined)
+	{
+		// если это мобильный девайс
+		canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		if(window.orientation == 90 || window.orientation == -90)// orientation landscape
+		{
+			fullscreen();
+		}		
+	}
+	else
+	{ // если компьютер
+		canvas.width = Math.min(640,window.innerWidth);
+		canvas.height = Math.min(640,window.innerHeight);
+	}
 	ctx.translate(0.5, 0.5);// убрать размытость линий
-	console.log('resizeCanvas');
 	
 		Touch.init();		
 		Module._resizeGL(canvas.width,canvas.height);		
