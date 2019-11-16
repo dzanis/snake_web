@@ -172,6 +172,7 @@
 	{					
 		Module._initGL();
 		window.addEventListener('resize', resizeCanvas, false);
+		window.addEventListener('orientationchange', updateOrientation, false);
           resizeCanvas();
 						
 		document.addEventListener('keydown', function(event) 
@@ -199,23 +200,18 @@
 	
 	function resizeCanvas()
 	{			
-	if(window.orientation !== undefined)
-	{
-		// если это мобильный девайс
-		canvas.width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		canvas.height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		if(window.orientation == 90 || window.orientation == -90)// orientation landscape
+		if(window.orientation !== undefined)
 		{
-			fullscreen();
-		}		
-	}
-	else
-	{ // если компьютер
-		canvas.width = Math.min(640,window.innerWidth);
-		canvas.height = Math.min(640,window.innerHeight);
-	}
-	ctx.translate(0.5, 0.5);// убрать размытость линий
-	
+			// если это мобильный девайс			
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+		}
+		else
+		{ // если компьютер
+			canvas.width = Math.min(640,window.innerWidth);
+			canvas.height = Math.min(640,window.innerHeight);
+		}
+		ctx.translate(0.5, 0.5);// убрать размытость линий	
 		Touch.init();		
 		Module._resizeGL(canvas.width,canvas.height);		
     }
@@ -225,6 +221,13 @@
 		ctx.strokeStyle = "rgba("+r+","+g+","+b+",1.0)";
 		ctx.fillStyle = ctx.strokeStyle;// так как для вывода текста нужен fillStyle
 	}
+	
+
+    function updateOrientation() 
+	{
+	  var viewport = document.getElementsByName('viewport')[0];	 
+      viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+    }
 
 // https://stackoverflow.com/questions/13157586/full-screen-canvas-on-mobile-devices	
  function fullscreen()
@@ -234,7 +237,7 @@
   }
   else {
     canvas.mozRequestFullScreen();
-  }            
+  }    
 }	
 		  	
       var statusElement = document.getElementById('status');
