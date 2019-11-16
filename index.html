@@ -172,7 +172,6 @@
 	{					
 		Module._initGL();
 		window.addEventListener('resize', resizeCanvas, false);
-		window.addEventListener('orientationchange', adapt_to_orientation, false);
           resizeCanvas();
 						
 		document.addEventListener('keydown', function(event) 
@@ -202,7 +201,12 @@
 	{			
 		if(window.orientation !== undefined)
 		{
-			// если это мобильный девайс			
+			// если это мобильный девайс
+			if(window.orientation == 90 || window.orientation == -90)// orientation landscape
+			{
+				Module._hide();
+				Touch.needFullScreen = true;
+			}	
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
 		}
@@ -221,34 +225,6 @@
 		ctx.strokeStyle = "rgba("+r+","+g+","+b+",1.0)";
 		ctx.fillStyle = ctx.strokeStyle;// так как для вывода текста нужен fillStyle
 	}
-	
-
-    function updateOrientation() 
-	{
-	  var viewport = document.getElementsByName('viewport')[0];	 
-      viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-    }
-	
-	function adapt_to_orientation() {
-      var content_width, screen_dimension;
-
-      if (window.orientation == 0 || window.orientation == 180) {
-        // portrait
-        content_width = 360;
-        screen_dimension = screen.width * 0.98; // fudge factor was necessary in my case
-      } else if (window.orientation == 90 || window.orientation == -90) {
-        // landscape
-        content_width = 640;
-        screen_dimension = screen.height;
-      }
-
-      var viewport_scale = screen_dimension / content_width;
-
-      // resize viewport
-		var viewport = document.getElementsByName('viewport')[0];	 
-      viewport.setAttribute('content', 'width=' + content_width + ', initial-scale=' + viewport_scale + ', maximum-scale=' + viewport_scale + 
-        ' ,minimum-scale=' + viewport_scale + ', user-scalable=no');
-    }
 
 // https://stackoverflow.com/questions/13157586/full-screen-canvas-on-mobile-devices	
  function fullscreen()

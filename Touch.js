@@ -101,9 +101,23 @@ Touch.init = function()
 
   // create a dummy button in the middle to accept touchstarts. Override the default CSS for no red colour.
   Touch.dpad['center'] = Touch.createDPadButton('center', function() {
-    // no op
+	  // no op
   }, function() {
-    Module._keyUp(32); // space
+	  if(Touch.needFullScreen)
+	{
+		if(Touch.twaice)
+		{
+			fullscreen();
+			Touch.needFullScreen = false;
+			Touch.twaice = undefined;
+		}		
+		Touch.twaice = true;		
+	}
+	else
+	{
+		Module._keyUp(32); // space
+	}
+    
   });
   Touch.dpad['center'].style.left= Touch.DPAD_BUTTON_WIDTH_SKIP_PERCENT + Touch.DPAD_BUTTON_WIDTH_PERCENT + '%';
   Touch.dpad['center'].style.bottom = Touch.DPAD_BUTTON_HEIGHT_PERCENT + '%';
