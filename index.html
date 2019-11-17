@@ -204,8 +204,7 @@
 			// если это мобильный девайс
 			if(window.orientation == 90 || window.orientation == -90)// orientation landscape
 			{
-				Module._hide();
-				Touch.needFullScreen = true;
+				Touch.startFullScreen();
 			}	
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
