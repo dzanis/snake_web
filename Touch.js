@@ -218,7 +218,7 @@ Touch.initFireButton = function()
   Touch.fireButton.style.bottom = '37%';
   Touch.fireButton.style.right = '37%';
   Touch.fireButton.style.textAlign  = 'center'; 
-  Touch.fireButton.innerText = 'Touch to fullscreen.\n\n If you use landscape orientation better use full screen';
+  Touch.fireButton.innerText = 'Touch to fullscreen.Because landscape orientation better use full screen';
 
   Touch.fireButton.press = function() {
 	  // no op
