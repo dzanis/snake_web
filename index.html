@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<!-- viewport, без возможности его увеличения пользователем -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+	<meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <title>snake</title>
     <style>
 	
@@ -88,48 +88,12 @@
     <script type='text/javascript'>
 		
 	// my js code 
-	function Sound() 
-	{
-	this.load = function(src){
-		var audio = new Audio();
-	  audio.src = src;
-	  audio.loop=true;// бесконечное проигрывание
-	  this.sound = audio;
-	  //src = src.replace('.', '_');
-	  this[src] = audio;
-	  }
-	  	  
-	  this.play = function(src){
-	  //src = src.replace('.', '_');
-	  this.sound = this[src];
-	  this.sound.play();
-	  // на всякий случай если мелодия остановится
-	  this.sound.addEventListener('ended', function() {console.log('ended ' + this.src);this.currentTime = 0;this.play();}, false);
 		
-	  }
-	  this.resume = function(){
-		this.sound.play();
-	  }
-	  this.stop = function(){
-		this.sound.pause();
-		this.sound.currentTime = 0;// чтобы послк стопа играла сначала
-	  }
-	  this.pause = function(){
-		this.sound.pause();
-	  }	  
-	  this.volume = function(volume){
-		this.sound.volume =  volume;
-	  }	  
-	}	
-	var mySound;
-	
 	function loadSound()
 	{
-	mySound = new Sound();
-	mySound.load("BReWErS-XBlade+7trn.mp3");
-	mySound.load("Canterwood.mp3");
-	}
-	
+		Sound.load("BReWErS-XBlade+7trn","BReWErS-XBlade+7trn.mp3");	
+		Sound.load("Canterwood","Canterwood - Hex Workshop 4.22 kg.mp3");
+	}	
 	
 	var canvas = document.getElementById("canvas");
 	var ctx = canvas.getContext("2d");
@@ -161,10 +125,10 @@
 		lastTime = currentTime;			
 		Module._drawGL(deltaTime);
 		
-		ctx.textAlign = "start";
-		ctx.fillStyle = "white";
-		ctx.fillText(getFPS(),20, 120);
-		ctx.fillText(window.innerWidth +'x'+window.innerHeight,20, 145);
+		//ctx.textAlign = "start";
+		//ctx.fillStyle = "white";
+		//ctx.fillText(getFPS(),20, 120);
+		//ctx.fillText(window.innerWidth +'x'+window.innerHeight,20, 145);
 		 requestAnimationFrame(gameLoop);
 	}
 	
@@ -199,9 +163,8 @@
 	
 	function resizeCanvas()
 	{			
-		if(window.orientation !== undefined)
+		if(window.orientation !== undefined)// если это мобильный девайс
 		{
-			// если это мобильный девайс
 			if(window.orientation == 90 || window.orientation == -90)// orientation landscape
 			{
 				Touch.startFullScreen();
@@ -224,17 +187,6 @@
 		ctx.strokeStyle = "rgba("+r+","+g+","+b+",1.0)";
 		ctx.fillStyle = ctx.strokeStyle;// так как для вывода текста нужен fillStyle
 	}
-
-// https://stackoverflow.com/questions/13157586/full-screen-canvas-on-mobile-devices	
- function fullscreen()
-{
-  if(canvas.webkitRequestFullScreen) {
-    canvas.webkitRequestFullScreen();
-  }
-  else {
-    canvas.mozRequestFullScreen();
-  }    
-}	
 		  	
       var statusElement = document.getElementById('status');
       var progressElement = document.getElementById('progress');
@@ -318,5 +270,6 @@
       };
 	  </script>
 	  <script src="Touch.js"></script>
+	   <script src="Sound.js"></script>
 	  <script async src=index.js></script>
 	  </body></html>
