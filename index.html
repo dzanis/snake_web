@@ -97,6 +97,8 @@
 	{
 		Sound.load("BReWErS-XBlade+7trn","BReWErS-XBlade+7trn.mp3");	
 		Sound.load("Canterwood","Canterwood-HexWorkshop4.22kg.mp3");
+		if ('ontouchstart' in window)
+		Sound.addMute();
 	}	
 	
 	var canvas = document.getElementById("canvas");
@@ -144,10 +146,6 @@
 	{			
 		if(window.orientation !== undefined)// если это мобильный девайс
 		{
-			if(window.orientation == 90 || window.orientation == -90)// orientation landscape
-			{
-				Touch.startFullScreen();
-			}	
 			canvas.width = document.documentElement.clientWidth;
 			canvas.height = document.documentElement.clientHeight;
 		}
