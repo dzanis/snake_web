@@ -67,3 +67,39 @@ Sound.addMute = function()
 }, false);
 	document.body.appendChild(Sound.muteButton);
 }
+
+Sound.enableSoundDialog = function()
+{
+	var enableSound = document.createElement('div');
+	enableSound.id = 'enableSound';
+	enableSound.style.cssText = 'width: 200px;margin-left: -110px;background-color: grey; text-align:center; border: 10px solid red;';
+	enableSound.innerHTML = 'Enable sound?<br>';
+
+	enableSound.style.position = 'absolute';
+	enableSound.style.top = '50%';
+	enableSound.style.left = '50%';
+
+	var yes = document.createElement('button');
+	yes.style.float = 'left';
+	yes.innerText = 'Yes';
+	enableSound.appendChild(yes);
+	var no = document.createElement('button');
+	no.style.float = 'right';
+	no.innerText = 'No';
+	enableSound.appendChild(no);
+
+	no.addEventListener('click', function (event)
+	{
+	event.preventDefault();
+	Sound.mute();
+	enableSound.outerHTML = ""
+	}, false);
+
+	yes.addEventListener('click', function (event)
+	{
+	enableSound.outerHTML = ""
+	}, false);
+	document.body.appendChild(enableSound);
+}
+
+
