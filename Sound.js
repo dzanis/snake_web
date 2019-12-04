@@ -1,6 +1,6 @@
 'use strict';
 var Sound = {};
-Sound.muted = false;
+Sound.muted = true;
 Sound.load = function(key,src)
 {
 	this.audio = new Audio();
@@ -70,36 +70,45 @@ Sound.addMute = function()
 
 Sound.enableSoundDialog = function()
 {
-	var enableSound = document.createElement('div');
-	enableSound.id = 'enableSound';
-	enableSound.style.cssText = 'width: 200px;margin-left: -110px;background-color: grey; text-align:center; border: 10px solid red;';
-	enableSound.innerHTML = 'Enable sound?<br>';
+	var overlay = document.createElement('div');
+	overlay.id = 'overlay';
+	overlay.style.cssText = 'background: rgba(0, 0, 0, 0.65);width: 100%; height: 100%;z-index: 12000;';
+	overlay.style.position = 'fixed';
+	overlay.style.top = '0';
+	overlay.style.left = '0';
+	
+	var dialog = document.createElement('div');
+	dialog.id = 'dialog';
+	dialog.style.cssText = 'width: 200px;margin-left: -110px;background-color: grey; text-align:center; border: 10px solid red;';
+	dialog.innerHTML = 'Enable sound?<br>';
 
-	enableSound.style.position = 'absolute';
-	enableSound.style.top = '50%';
-	enableSound.style.left = '50%';
+	dialog.style.position = 'absolute';
+	dialog.style.top = '40%';
+	dialog.style.left = '50%';
 
 	var yes = document.createElement('button');
 	yes.style.float = 'left';
 	yes.innerText = 'Yes';
-	enableSound.appendChild(yes);
+	dialog.appendChild(yes);
 	var no = document.createElement('button');
 	no.style.float = 'right';
 	no.innerText = 'No';
-	enableSound.appendChild(no);
+	dialog.appendChild(no);
 
 	no.addEventListener('click', function (event)
 	{
-	event.preventDefault();
-	Sound.mute();
-	enableSound.outerHTML = ""
+	Sound.muted = true;
+	overlay.outerHTML = ""
 	}, false);
 
 	yes.addEventListener('click', function (event)
 	{
-	enableSound.outerHTML = ""
+	Sound.muted = false;	
+	overlay.outerHTML = ""
 	}, false);
-	document.body.appendChild(enableSound);
+	
+	overlay.appendChild(dialog);	
+	document.body.appendChild(overlay);
 }
 
 
