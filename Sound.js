@@ -12,6 +12,7 @@ Sound.load = function(key,src)
 Sound.play = function(key)
 {
 this.audio = this[key];
+if(!Sound.muted) 
 this.audio.play();
 // на всякий случай если мелодия остановится
 this.audio.addEventListener('ended', function() {console.log('ended ' + this.audio.src);this.currentTime = 0;this.play();}, false);
