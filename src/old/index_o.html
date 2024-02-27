@@ -1,0 +1,91 @@
+<html>
+<body>
+
+<canvas id="myCanvas" width="200" height="100" style="border:1px solid #000000;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+<script>
+
+function file_load( name ){
+    let promise = new Promise( (ok, nope) => {
+        fetch( name ).then( resp => {
+            resp.arrayBuffer().then( arr => ok( arr ) );
+        });
+    });
+    return promise;
+}
+
+var canvas = document.getElementById("myCanvas");
+let ctx = canvas.getContext("2d");
+
+var env = {
+  setInterval: function (x) {
+    setInterval(() => {
+      wasmInstance.exports.runCallback(x);  
+    }, 16);
+  },
+  jsFillRect: function (x, y, w, h) {
+    ctx.fillStyle = "orange";
+    ctx.fillRect(x, y, w, h);
+  },
+  jsClearRect: function (x, y, w, h) {
+    ctx.clearRect(x, y, w, h);
+  }
+}
+
+
+
+
+let memory = null;
+let exports = {};
+let imports = {};
+let files = [];
+
+function canvas_render(){
+    exports['render']();    
+    window.requestAnimationFrame( canvas_render );
+}
+
+
+imports["setInterval"] = function (x){
+    setInterval(() => {
+      wasmInstance.exports.runCallback(x);  
+    }, 16);
+}
+
+imports["jsFillRect"] = function (x, y, w, h){
+    ctx.fillStyle = "orange";
+    ctx.fillRect(x, y, w, h);
+}
+
+imports["jsClearRect"] = function (x, y, w, h){
+    ctx.clearRect(x, y, w, h);
+}
+
+window.onload = async function(){
+
+// Data
+    files[0] = file_load( "main.wasm" );
+    //files[1] = file_load( "model.buf" );
+    //files[2] = texture_load( "textures/diffuse.png" );
+    //files[3] = texture_load( "textures/normal.png" );
+    for( var i=0; i<files.length; i++ )
+        files[i] = await files[i];
+// WASM
+    let binary = files[0];
+imports['memory'] = new WebAssembly['Memory']( {'initial':32} );
+    memory = new Uint8Array( imports['memory']['buffer'] );
+    let program = await WebAssembly['instantiate']( binary, { "env":imports } );
+    
+    let instance = program['instance'];
+    exports = instance['exports'];
+	
+	if( !exports['init']() )
+        error_fatal( "Engine initialization failed" );
+		
+		canvas_render();
+}
+</script> 
+<script async type="text/javascript" src="main.js"></script>
+</body>
+</html>
